@@ -1,0 +1,60 @@
+drop table members cascade constraint;
+drop table talents cascade constraint;
+drop table companies cascade constraint;
+drop table tal_comp cascade constraint;
+drop sequence talnum_sequence;
+drop sequence compnum_sequence;
+
+create sequence talnum_sequence
+increment by 1
+start with 1
+maxvalue 9999;
+
+create sequence compnum_sequence
+increment by 1
+start with 1
+maxvalue 9999;
+
+create table members(
+id varchar(20),
+pw varchar(20) constraint members_pw_nn not null,
+name varchar(20) constraint members_name_nn not null,
+age number(5),
+constraint members_id_pk primary key(id));
+
+create table talents(
+talnum number(20),
+id varchar(20) constraint talents_id_nn not null,
+title varchar(100) constraint talents_title_nn not null,
+content varchar(500) constraint talents_content_nn not null,
+talent varchar(20) constraint talents_talent_nn not null,
+constraint talents_talnum_pk primary key(talnum),
+constraint talents_id_fk foreign key(id)
+references members(id));
+
+create table companies(
+compnum number(20),
+compname varchar(20) constraint companies_compname_nn not null,
+comptal varchar(20) constraint companies_comptal_nn not null,
+constraint compname_compnum_pk primary key(compnum));
+
+create table tal_comp(
+talnum number(20),
+compnum number(20) constraint tal_comp_compnum_nn not null,
+constraint tal_comp_talnum_pk primary key(talnum),
+constraint tal_comp_talnum_fk foreign key(talnum)
+references talents(talnum),
+constraint companies_compnum_fk foreign key(compnum)
+references companies(compnum));
+
+insert into mem(id, pw, name, age)
+values ('111', 'gogo', 'wow', 123);
+
+insert into talents(talnum, id, title, content, talent)
+values (talnum_sequence.nextval, '111', 'gogo', 'wow', 'fession');
+
+insert into companies(compnum, compname, comptal)
+values (compnum_sequence.nextval, 'SMHRD', 'fession');
+
+insert into tal_comp(talnum, compnum)
+values (1, 1);
